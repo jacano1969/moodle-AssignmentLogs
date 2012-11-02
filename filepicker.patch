@@ -1,0 +1,53 @@
+--- repository/filepicker.js	2012-11-02 09:31:44.165722898 +0500
++++ repository/filepicker.js	2012-11-02 09:38:31.290946329 +0500
+@@ -1169,7 +1169,49 @@ M.core_filepicker.init = function(Y, opt
+                 e.preventDefault();
+                 var license = Y.one('#select-license-'+client_id).get('value');
+                 YAHOO.util.Cookie.set('recentlicense', license);
+-                if (!Y.one('#'+id+'_file').get('value')) {  
++                if (!Y.one('#'+id+'_file').get('value')) {
++                //Added By Hina Yousuf
++                          var xmlHttp
++
++                          try
++                          {
++                            //Firefox, Opera 8.0+, Safari
++                            xmlHttp = new XMLHttpRequest();
++                          }
++                          catch(e)
++                          {
++                            //Internet Explorer
++                            try
++                            {
++                              xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
++                            }
++                            catch(e)
++                            {
++                              try
++                              {
++                                xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
++                              }
++                              catch(e)
++                              {
++                                alert("Your browser does not support AJAX!")
++                                return false;
++                              }
++                            }
++                          }
++
++                          xmlHttp.open("GET", "log.php", true);
++                                  xmlHttp.send(null);
++                                  xmlHttp.onreadystatechange = function()
++                                  {
++                                    if(xmlHttp.readyState == 4)
++                                    {
++
++
++                                    }
++                                  }
++
++                                  //end
++   
+ 		 scope.print_msg(M.str.repository.nofilesattached, 'error');
+                     return false;
+                 }

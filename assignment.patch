@@ -1,0 +1,149 @@
+diff -rupN assignment1/lang/en/assignment.php assignment/lang/en/assignment.php
+--- assignment1/lang/en/assignment.php	2012-11-02 09:34:43.328830394 +0500
++++ assignment/lang/en/assignment.php	2012-11-02 09:24:02.479447750 +0500
+@@ -24,7 +24,6 @@
+  */
+ 
+ $string['allowdeleting'] = 'Allow deleting';
+-$string['nofile'] = 'No files are attached';
+ $string['allowdeleting_help'] = 'If enabled, students may delete uploaded files at any time before submitting for grading.';
+ $string['allowmaxfiles'] = 'Maximum number of uploaded files';
+ $string['allowmaxfiles_help'] = 'The maximum number of files which may be uploaded. As this figure is not displayed anywhere, it is suggested that it is mentioned in the assignment description.';
+diff -rupN assignment1/type/upload/assignment.class.php assignment/type/upload/assignment.class.php
+--- assignment1/type/upload/assignment.class.php	2012-11-02 09:34:43.474830531 +0500
++++ assignment/type/upload/assignment.class.php	2012-11-02 09:17:35.431220652 +0500
+@@ -428,37 +428,8 @@ class assignment_upload extends assignme
+                 $this->upload_responsefile($mform, $filemanager_options);
+                 break;
+             case 'uploadfile':
+-		//Added By Hina Yousuf :No files Attached
+-
+-                         $formdata = $mform->get_data();
+-
+-                        $fs = get_file_storage();
+-
+-                       $submission = $this->get_submission($USER->id, true); //create new submission if needed
+-
+-                        $fs->delete_area_files($this->context->id, 'mod_assignment', 'submission', $submission->id);
+-
+-                         $formdata = file_postupdate_standard_filemanager($formdata, 'files', $filemanager_options, $this->context, 'mod_assignment', 'submission', $submission->id);
+-
+-                        $files = $fs->get_area_files($this->context->id, 'mod_assignment', 'submission', $submission->id);
+-
+-                        if(empty($files)){
+-
+-                                        add_to_log($this->course->id, 'assignment', 'files not attached', 'view.php?a='.$this->assignment->id, $this->assignment->name, $this->cm->id);
+-
+-                                        $viewurl = new moodle_url('/mod/assignment/view.php', array('id'=>$this->cm->id));
+-
+-                                        redirect($viewurl, get_string('nofile', 'assignment'));  //submitting not allowed!
+-
+-                                }else{
+-
+-                                        $this->upload_file($mform, $filemanager_options);
+-
+-                                }
+-
+-                        //end
+-
+-           //     $this->upload_file($mform, $filemanager_options);
++		
++              $this->upload_file($mform, $filemanager_options);
+             case 'savenotes':
+             case 'editnotes':
+                 $this->upload_notes();
+diff -rupN assignment1/type/upload/upload.php assignment/type/upload/upload.php
+--- assignment1/type/upload/upload.php	2012-11-02 09:34:43.479830536 +0500
++++ assignment/type/upload/upload.php	2012-11-02 09:20:07.709312118 +0500
+@@ -26,7 +26,6 @@ require_once(dirname(dirname(dirname(dir
+ require_once(dirname(__FILE__).'/upload_form.php');
+ require_once(dirname(__FILE__).'/assignment.class.php');
+ require_once("$CFG->dirroot/repository/lib.php");
+-session_start();
+ $contextid = required_param('contextid', PARAM_INT);
+ $id = optional_param('id', null, PARAM_INT);
+ 
+@@ -55,17 +54,8 @@ $PAGE->set_context($context);
+ $title = strip_tags($course->fullname.': '.get_string('modulename', 'assignment').': '.format_string($assignment->name,true));
+ $PAGE->set_title($title);
+ $PAGE->set_heading($title);
+-//Added By Hina Yousuf
+-
+-$_SESSION['course']=$course->id;
+-
+-$_SESSION['cm']=$cm->id;
+-
+-$_SESSION['assignment']=$assignment;
+-
+-//end
+ $instance = new assignment_upload($cm->id, $assignment, $cm, $course);
+-//$submission = $instance->get_submission($formdata->userid, true);
++$submission = $instance->get_submission($formdata->userid, true);
+ 
+ $filemanager_options = array('subdirs'=>1, 'maxbytes'=>$assignment->maxbytes, 'maxfiles'=>$assignment->var1, 'accepted_types'=>'*', 'return_types'=>FILE_INTERNAL);
+ 
+@@ -74,7 +64,7 @@ $filemanager_options = array('subdirs'=>
+ if ($mform->is_cancelled()) {
+         redirect(new moodle_url('/mod/assignment/view.php', array('id'=>$cm->id)));
+ } else if ($formdata = $mform->get_data()) {
+-    $submission = $instance->get_submission($formdata->userid, true);
++    
+     $instance->upload($mform, $filemanager_options);
+     die;
+ }
+diff -rupN assignment1/type/uploadsingle/assignment.class.php assignment/type/uploadsingle/assignment.class.php
+--- assignment1/type/uploadsingle/assignment.class.php	2012-11-02 09:34:43.484830541 +0500
++++ assignment/type/uploadsingle/assignment.class.php	2012-11-02 09:21:08.904346643 +0500
+@@ -163,30 +163,7 @@ class assignment_uploadsingle extends as
+                 $this->upload_responsefile($mform);
+                 break;
+             case 'uploadfile':
+-	//Added By Hina Yousuf
+-
+-                                //no files attached assignment error
+-
+-                                $formdata = $mform->get_data();
+-
+-                                $newfilename = $mform->get_new_filename('assignment_file');
+-
+-                                if($newfilename==""){
+-
+-                                        add_to_log($this->course->id, 'assignment', 'files not attached', 'view.php?a='.$this->assignment->id, $this->assignment->name, $this->cm->id);
+-
+-                                        $viewurl = new moodle_url('/mod/assignment/view.php', array('id'=>$this->cm->id));
+-
+-                                        redirect($viewurl, get_string('nofile', 'assignment'));  //submitting not allowed!
+-
+-                                }else{
+-
+-                                        $this->upload_file($mform);
+-
+-                                }
+-
+-                                //end
+-        //        $this->upload_file($mform);
++                $this->upload_file($mform);
+         }
+     }
+ 
+diff -rupN assignment1/type/uploadsingle/upload.php assignment/type/uploadsingle/upload.php
+--- assignment1/type/uploadsingle/upload.php	2012-11-02 09:34:43.487830544 +0500
++++ assignment/type/uploadsingle/upload.php	2012-11-02 09:22:26.621390229 +0500
+@@ -26,7 +26,6 @@ require_once(dirname(dirname(dirname(dir
+ require_once(dirname(__FILE__).'/upload_form.php');
+ require_once(dirname(__FILE__).'/assignment.class.php');
+ require_once("$CFG->dirroot/repository/lib.php");
+-session_start();
+ $contextid = required_param('contextid', PARAM_INT);
+ $id = optional_param('id', null, PARAM_INT);
+ 
+@@ -58,9 +57,6 @@ $PAGE->set_title($title);
+ $PAGE->set_heading($title);
+ 
+ $options = array('subdirs'=>0, 'maxbytes'=>get_max_upload_file_size($CFG->maxbytes, $course->maxbytes, $assignment->maxbytes), 'maxfiles'=>1, 'accepted_types'=>'*', 'return_types'=>FILE_INTERNAL);
+-$_SESSION['course']=$course->id;
+-$_SESSION['cm']=$cm->id;
+-$_SESSION['assignment']=$assignment;
+ 
+     $mform = new mod_assignment_uploadsingle_form(null, array('contextid'=>$contextid, 'userid'=>$formdata->userid, 'options'=>$options));
+ 

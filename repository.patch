@@ -1,0 +1,24 @@
+--- repository/repository_ajax.php	2012-11-02 09:30:48.504683910 +0500
++++ repository/repository_ajax.php	2012-11-02 09:37:51.779921896 +0500
+@@ -51,6 +51,7 @@ $saveas_filename = optional_param('title
+ $saveas_path   = optional_param('savepath', '/', PARAM_PATH);   // save as file path
+ $search_text   = optional_param('s', '', PARAM_CLEANHTML);
+ $linkexternal  = optional_param('linkexternal', '', PARAM_ALPHA);
++session_start();
+ list($context, $course, $cm) = get_context_info_array($contextid);
+ require_login($course, false, $cm);
+ $PAGE->set_context($context);
+@@ -256,6 +257,13 @@ switch ($action) {
+             echo json_encode($result);
+         } catch (Exception $e) {
+             $err->error = $e->getMessage();
++            //Added By Hina Yousuf
++                        if(isset($_SESSION['assignment'])){
++                                $assignment=$_SESSION['assignment'];
++                                add_to_log($course->id, 'assignment', 'file size error','view.php?a='.$assignment->id, $assignment->name, $cm->id);
++                        }
++                        //end
++
+ 	    echo json_encode($err);
+             die;
+         }
