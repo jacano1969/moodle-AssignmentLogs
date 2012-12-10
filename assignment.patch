@@ -1,5 +1,5 @@
 diff -rupN assignment1/lang/en/assignment.php assignment/lang/en/assignment.php
---- assignment1/lang/en/assignment.php	2012-11-02 09:34:43.328830394 +0500
+--- assignment/lang/en/assignment.php	2012-11-02 09:34:43.328830394 +0500
 +++ assignment/lang/en/assignment.php	2012-11-02 09:24:02.479447750 +0500
 @@ -24,7 +24,6 @@
   */
@@ -10,7 +10,7 @@ diff -rupN assignment1/lang/en/assignment.php assignment/lang/en/assignment.php
  $string['allowmaxfiles'] = 'Maximum number of uploaded files';
  $string['allowmaxfiles_help'] = 'The maximum number of files which may be uploaded. As this figure is not displayed anywhere, it is suggested that it is mentioned in the assignment description.';
 diff -rupN assignment1/type/upload/assignment.class.php assignment/type/upload/assignment.class.php
---- assignment1/type/upload/assignment.class.php	2012-11-02 09:34:43.474830531 +0500
+--- assignment/type/upload/assignment.class.php	2012-11-02 09:34:43.474830531 +0500
 +++ assignment/type/upload/assignment.class.php	2012-11-02 09:17:35.431220652 +0500
 @@ -428,37 +428,8 @@ class assignment_upload extends assignme
                  $this->upload_responsefile($mform, $filemanager_options);
@@ -53,7 +53,7 @@ diff -rupN assignment1/type/upload/assignment.class.php assignment/type/upload/a
              case 'editnotes':
                  $this->upload_notes();
 diff -rupN assignment1/type/upload/upload.php assignment/type/upload/upload.php
---- assignment1/type/upload/upload.php	2012-11-02 09:34:43.479830536 +0500
+--- assignment/type/upload/upload.php	2012-11-02 09:34:43.479830536 +0500
 +++ assignment/type/upload/upload.php	2012-11-02 09:20:07.709312118 +0500
 @@ -26,7 +26,6 @@ require_once(dirname(dirname(dirname(dir
  require_once(dirname(__FILE__).'/upload_form.php');
@@ -92,7 +92,7 @@ diff -rupN assignment1/type/upload/upload.php assignment/type/upload/upload.php
      die;
  }
 diff -rupN assignment1/type/uploadsingle/assignment.class.php assignment/type/uploadsingle/assignment.class.php
---- assignment1/type/uploadsingle/assignment.class.php	2012-11-02 09:34:43.484830541 +0500
+--- assignment/type/uploadsingle/assignment.class.php	2012-11-02 09:34:43.484830541 +0500
 +++ assignment/type/uploadsingle/assignment.class.php	2012-11-02 09:21:08.904346643 +0500
 @@ -163,30 +163,7 @@ class assignment_uploadsingle extends as
                  $this->upload_responsefile($mform);
@@ -127,7 +127,7 @@ diff -rupN assignment1/type/uploadsingle/assignment.class.php assignment/type/up
      }
  
 diff -rupN assignment1/type/uploadsingle/upload.php assignment/type/uploadsingle/upload.php
---- assignment1/type/uploadsingle/upload.php	2012-11-02 09:34:43.487830544 +0500
+--- assignment/type/uploadsingle/upload.php	2012-11-02 09:34:43.487830544 +0500
 +++ assignment/type/uploadsingle/upload.php	2012-11-02 09:22:26.621390229 +0500
 @@ -26,7 +26,6 @@ require_once(dirname(dirname(dirname(dir
  require_once(dirname(__FILE__).'/upload_form.php');
